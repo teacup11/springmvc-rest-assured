@@ -3,7 +3,9 @@ package com.appsdeveloperblog.app.ws.restassuredtest;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -11,6 +13,7 @@ import java.util.Map;
 import static io.restassured.RestAssured.given;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+@TestMethodOrder(MethodOrderer.Alphanumeric.class) // tests run in a fixed order
 class UsersWebServiceEndpointTest {
     // this class is because we cannot mock with integration tests
 
@@ -25,7 +28,7 @@ class UsersWebServiceEndpointTest {
     }
 
     @Test
-    final void testUserLogin() {
+    final void A_testUserLogin() {
 
         Map<String, String> loginDetails = new HashMap<>();
         loginDetails.put("email", EMAIL_ADDRESS);
@@ -45,6 +48,7 @@ class UsersWebServiceEndpointTest {
         //assert that values not null
         assertNotNull(authorizationHeader);
         assertNotNull(userId);
+
 
     }
 }
