@@ -24,7 +24,7 @@ class TestCreateUser {
     @BeforeEach
     void setUp() throws Exception {
         // this method is called first
-        // use it to set up the base uri and the port number of my app, application context path
+        // use it to set up the base uri and the port number of my app, application context path on class level
         RestAssured.baseURI = "http://localhost";
         RestAssured.port = 8080;
     }
@@ -33,7 +33,7 @@ class TestCreateUser {
     final void testCreateUser() {
         // test: create user api call
 
-        //body
+        //body, conver hash map to json
         List<Map<String, Object>> userAddresses = new ArrayList<>();
 
         Map<String, Object> shippingAddress = new HashMap<>();
