@@ -19,7 +19,7 @@ class UsersWebServiceEndpointTest {
     // this class is because we cannot mock with integration tests
 
     private final String CONTEXT_PATH = "/mobile-app-ws";
-    private final String EMAIL_ADDRESS = "ziva.groza@mail.com";
+    private final String EMAIL_ADDRESS = "ziva.groza@mail3.com";
     private final String JSON = "application/json";
     private static String authorizationHeader;
     private static String userId;
@@ -74,7 +74,7 @@ class UsersWebServiceEndpointTest {
         String lastName = response.jsonPath().getString("lastName");
 
         List<Map<String, String>> addresses = response.jsonPath().getList("addresses");
-        String addressId = addresses.get(0).get("addressId");
+
 
         // assert that these values are not null
         assertNotNull(userPublicId);
@@ -87,6 +87,7 @@ class UsersWebServiceEndpointTest {
 
         //validate list of addresses
         assertTrue(addresses.size() == 2);
+        String addressId = addresses.get(0).get("addressId");
         assertTrue(addressId.length() == 30);
     }
 }

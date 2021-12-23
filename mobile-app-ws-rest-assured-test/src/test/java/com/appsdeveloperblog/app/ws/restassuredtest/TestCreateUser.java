@@ -56,7 +56,7 @@ class TestCreateUser {
         Map<String, Object> userDetails = new HashMap<>();
         userDetails.put("firstName", "Živa");
         userDetails.put("lastName", "Groza");
-        userDetails.put("email", "ziva.groza@mail2.com");
+        userDetails.put("email", "ziva.groza@mail3.com");
         userDetails.put("password", "123");
         userDetails.put("addresses", userAddresses);
 
