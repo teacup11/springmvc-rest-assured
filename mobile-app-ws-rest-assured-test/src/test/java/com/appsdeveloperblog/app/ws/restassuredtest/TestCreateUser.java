@@ -1,8 +1,17 @@
 package com.appsdeveloperblog.app.ws.restassuredtest;
 
 import io.restassured.RestAssured;
+import io.restassured.response.Response;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import static io.restassured.RestAssured.given;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 
 class TestCreateUser {
@@ -19,7 +28,50 @@ class TestCreateUser {
 
     @Test
     final void testCreateUser() {
-        // test create user api call
+        // test: create user api call
+
+        //body
+        List<Map<String, Object>> userAddresses = new ArrayList<>();
+
+        Map<String, Object> shippingAddress = new HashMap<>();
+        shippingAddress.put("city","Ljubljana");
+        shippingAddress.put("country", "Slovenia");
+        shippingAddress.put("streetName", "123 Ulica");
+        shippingAddress.put("postalCode", "1000");
+        shippingAddress.put("type", "shipping");
+
+        Map<String, Object> billingAddress = new HashMap<>();
+        billingAddress.put("city", "Celje");
+        billingAddress.put("country", "Slovenia");
+        billingAddress.put("streetName", "1234 Ulica");
+        billingAddress.put("postalCode", "3000");
+        billingAddress.put("type", "billing");
+
+        userAddresses.add(shippingAddress);
+        userAddresses.add(billingAddress);
+
+        Map<String, Object> userDetails = new HashMap<>();
+        userDetails.put("firstName", "Živa");
+        userDetails.put("lastName", "Groza");
+        userDetails.put("email", "ziva.groza@mail.com");
+        userDetails.put("password", "123");
+        userDetails.put("addresses", userAddresses);
+
+        // prepare http request
+        Response response = given()
+                .contentType("application/json")
+                .accept("application/json")
+                .body(userDetails)
+                .when().post(CONTEXT_PATH + "/users")
+                .then().statusCode(200)
+                .contentType("application/json")
+                .extract()
+                .response();
+
+        // return string value for json key user id and validate user id not null
+        String userId = response.jsonPath().getString("userId");
+        assertNotNull(userId);
+
     }
 
 }
