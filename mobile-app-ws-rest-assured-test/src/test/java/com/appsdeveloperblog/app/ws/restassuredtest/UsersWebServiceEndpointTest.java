@@ -8,11 +8,11 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static io.restassured.RestAssured.given;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 @TestMethodOrder(MethodOrderer.Alphanumeric.class) // tests run in a fixed order
 class UsersWebServiceEndpointTest {
@@ -59,19 +59,35 @@ class UsersWebServiceEndpointTest {
     final void B_testGetUserDetails() {
 
         Response response = given()
+                .pathParam("id", userId)
                 .header("Authorization", authorizationHeader)
                 .accept(JSON)
-                .when().get(CONTEXT_PATH + "/users/" + userId)
+                .when().get(CONTEXT_PATH + "/users/{id}")
                 .then().statusCode(200)
                 .contentType(JSON)
                 .extract().response();
 
-        // assert that response contains user id and user email address
+        // assert that response contains:
         String userPublicId = response.jsonPath().getString("userId");
         String userEmail = response.jsonPath().getString("email");
+        String firstName = response.jsonPath().getString("firstName");
+        String lastName = response.jsonPath().getString("lastName");
+
+        List<Map<String, String>> addresses = response.jsonPath().getList("addresses");
+        String addressId = addresses.get(0).get("addressId");
+
         // assert that these values are not null
         assertNotNull(userPublicId);
         assertNotNull(userEmail);
+        assertNotNull(firstName);
+        assertNotNull(lastName);
+
+        //validate that email address equals
+        assertEquals(EMAIL_ADDRESS, userEmail);
+
+        //validate list of addresses
+        assertTrue(addresses.size() == 2);
+        assertTrue(addressId.length() == 30);
     }
 }
 
