@@ -23,6 +23,7 @@ class UsersWebServiceEndpointTest {
     private final String JSON = "application/json";
     private static String authorizationHeader;
     private static String userId;
+    private static List<Map<String, String>> addresses;
 
     @BeforeEach
     void setUp() throws Exception {
@@ -89,6 +90,39 @@ class UsersWebServiceEndpointTest {
         assertTrue(addresses.size() == 2);
         String addressId = addresses.get(0).get("addressId");
         assertTrue(addressId.length() == 30);
+    }
+
+    @Test
+    final void C_TestUserdetails() {
+
+        //define user details - body
+        Map<String, Object> userDetails = new HashMap<>();
+        userDetails.put("firstName", "Serge");
+        userDetails.put("lastName", "Kargapolov");
+
+        //create http request
+        Response response = given().contentType(JSON)
+                .accept(JSON)
+                .header("Authorization", authorizationHeader)
+                .pathParam("id", userId)
+                .body(userDetails)
+                .when().put(CONTEXT_PATH + "/users/{id}")
+                .then().statusCode(200)
+                .contentType(JSON)
+                .extract().response();
+
+        // check if values are correct in our response
+        String firstName = response.jsonPath().getString("firstName");
+        String lastName = response.jsonPath().getString("lastName");
+
+        List<Map<String, String>> storedAddresses = response.jsonPath().getList("addresses");
+
+        assertEquals("Serge", firstName);
+        assertEquals("Kargapolov", lastName);
+        assertNotNull(storedAddresses);
+        assertTrue(addresses.size() == storedAddresses.size());
+        assertEquals(addresses.get(0).get("streetName"), storedAddresses.get(0).get("streetName"));
+
     }
 }
 
