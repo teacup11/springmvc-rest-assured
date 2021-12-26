@@ -124,5 +124,21 @@ class UsersWebServiceEndpointTest {
         assertEquals(addresses.get(0).get("streetName"), storedAddresses.get(0).get("streetName"));
 
     }
+
+    @Test
+    final void D_TestDeleteUserDetails() {
+
+        Response response = given()
+                .header("Authorization", authorizationHeader)
+                .accept(JSON)
+                .pathParam("id", userId)
+                .when().delete(CONTEXT_PATH + "/users/{id}")
+                .then().statusCode(200)
+                .contentType(JSON)
+                .extract().response();
+
+        String operationResult = response.jsonPath().getString("operationResult");
+        assertEquals("SUCCESS", operationResult);
+    }
 }
 
